@@ -25,9 +25,9 @@ VIEW_DISTANCE="8"
 SIMULATION_DISTANCE="4"
 ONLINE_MODE="TRUE"
 MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser"
-BACKUP_FOLDER="Nombre de la carpeta donde van las Backups (Ejemplo:'Backup')"
+BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
-VOLUME_NAME="Nombre que le vamos a poner al volumen de docker (En este caso: 'minecraftdata')"
+VOLUME_NAME="Nombre del volumen usado por el script de backup (Ejemplo: 'minecraftdata')"
 CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 ```
 
