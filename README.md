@@ -24,7 +24,7 @@ ENABLE_WHITELIST="TRUE"
 VIEW_DISTANCE="8"
 SIMULATION_DISTANCE="4"
 ONLINE_MODE="TRUE"
-MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser"
+MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet"
 BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
 VOLUME_NAME="Nombre del volumen usado por el script de backup (Ejemplo: 'minecraftdata')"
@@ -33,9 +33,10 @@ CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 
 El servidor usa:
 - Puerto Java: `25565/tcp`
-- Puerto Bedrock (Geyser): `19132/udp`
+- Puerto Bedrock (contenedor Geyser): `19132/udp`
 
 Para cargar cualquier mod deberá hacerse en la carpeta `mods`
+La configuración de Geyser standalone se encuentra en `geyser/config.yml`
 
 Ejecutar Docker compose:
 ```

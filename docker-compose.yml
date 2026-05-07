@@ -20,10 +20,19 @@ services:
     tty: true
     ports:
       - "25565:25565"
-      - "19132:19132/udp"
     restart: unless-stopped
     stdin_open: true
     working_dir: /
     volumes:
       - ./data:/data
       - ./mods:/mods
+  geyser:
+    container_name: Geyser
+    image: ghcr.io/geysermc/geyser:latest
+    depends_on:
+      - minecraft
+    ports:
+      - "19132:19132/udp"
+    restart: unless-stopped
+    volumes:
+      - ./geyser:/config
