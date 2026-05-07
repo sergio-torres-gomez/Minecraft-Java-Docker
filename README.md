@@ -14,22 +14,28 @@ Configurar archivo `.env`
 
 ```
 SERVER_NAME="Nombre del servidor"
-DIFFICULTY="easy"
-GAMEMODE="survival"
-LEVEL_NAME="Nombre del mundo"
-MAX_PLAYERS="3"
+TYPE="FABRIC"
+VERSION="1.21.5"
+MEMORY="1500M"
+DIFFICULTY="normal"
+MODE="survival"
+MAX_PLAYERS="5"
+ENABLE_WHITELIST="TRUE"
+VIEW_DISTANCE="8"
+SIMULATION_DISTANCE="4"
+ONLINE_MODE="TRUE"
+MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser"
 BACKUP_FOLDER="Nombre de la carpeta donde van las Backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
 VOLUME_NAME="Nombre que le vamos a poner al volumen de docker (En este caso: 'minecraftdata')"
 CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 ```
 
-Para cargar cualquier plugin deberá hacerse en la carpeta `plugins`
+El servidor usa:
+- Puerto Java: `25565/tcp`
+- Puerto Bedrock (Geyser): `19132/udp`
 
-Crear el volumen de Docker:
-```
-docker volume create minecraftdata
-```
+Para cargar cualquier mod deberá hacerse en la carpeta `mods`
 
 Ejecutar Docker compose:
 ```
