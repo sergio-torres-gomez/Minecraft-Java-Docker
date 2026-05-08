@@ -26,7 +26,7 @@ VIEW_DISTANCE="8"
 SIMULATION_DISTANCE="4"
 ONLINE_MODE="TRUE"
 ENABLE_RCON="true"
-RCON_PASSWORD="Cambia esta contraseña"
+RCON_PASSWORD="ChangeThis-UseAUniqueStrongPassword-Now"
 MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser,floodgate"
 BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
@@ -38,6 +38,8 @@ El servidor usa:
 - Puerto Java: `25565/tcp`
 - Puerto Bedrock (plugin Geyser): `19132/udp`
 - Puerto RCON: `25575/tcp`
+
+⚠️ `RCON_PASSWORD` da acceso administrativo al servidor. Cámbiala siempre por una contraseña fuerte y única antes de exponer el puerto RCON.
 
 Para cargar cualquier mod deberá hacerse en la carpeta `mods`
 Los datos del servidor se guardan en la carpeta oculta `.data`
