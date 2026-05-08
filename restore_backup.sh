@@ -6,17 +6,17 @@ set -e
 # Display Help
 Help() {
   echo
-  echo "docker-volume-restore-backup"
+  echo "minecraft-bind-restore-backup"
   echo "####################"
   echo
-  echo "Description: Restore Backups docker volumes."
-  echo "Syntax: docker-volume-restore-backup [-v|-a|-o|-c|help]"
-  echo "Example: docker-volume-restore-backup -v postgres_data01 -o /tmp -c postgres01"
+  echo "Description: Restore Backups from bind mount tar files."
+  echo "Syntax: minecraft-bind-restore-backup [-f|-d|-p|help]"
+  echo "Example: minecraft-bind-restore-backup -f data_2026-01-01_000000.tar -d /tmp/Minecraft -p /var/www/minecraft/.data"
   echo "options:"
-  echo "  -f    File name docker backup."
-  echo "  -c    Docker container name."
+  echo "  -f    Backup file name."
   echo "  -d    Backups directory."
-  echo "  help  Show docker-volume-restore-backup manual."
+  echo "  -p    Data directory path."
+  echo "  help  Show minecraft-bind-restore-backup manual."
   echo
 }
 
@@ -27,13 +27,13 @@ if [[ $1 == 'help' ]]; then
 fi
 
 # Process params
-while getopts ":c: :f: :d:" opt; do
+while getopts ":f: :d: :p:" opt; do
   case $opt in
-    c) CONTAINER="$OPTARG"
-    ;;
     f) FILE="$OPTARG"
     ;;
     d) DIRECTORY="$OPTARG"
+    ;;
+    p) DATA_PATH="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&2
     Help
@@ -41,6 +41,12 @@ while getopts ":c: :f: :d:" opt; do
   esac
 done
 
-echo "Start Restore Volume Backup"
-docker run --rm --volumes-from $CONTAINER -v $DIRECTORY:/backup bash -c "cd /data && tar xvf /backup/$FILE --strip 1"
+[[ -z "$FILE" ]] && { echo "Parameter -f|file is empty" ; exit 1; }
+[[ -z "$DIRECTORY" ]] && { echo "Parameter -d|directory is empty" ; exit 1; }
+[[ -z "$DATA_PATH" ]] && { echo "Parameter -p|path is empty" ; exit 1; }
+[[ ! -f "$DIRECTORY/$FILE" ]] && { echo "Backup file does not exist: $DIRECTORY/$FILE" ; exit 1; }
+
+mkdir -p "$DATA_PATH"
+echo "Start Restore Bind Backup"
+tar xvf "$DIRECTORY/$FILE" -C "$DATA_PATH"
 echo "Finsh"

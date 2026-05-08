@@ -6,20 +6,19 @@ set -e
 # Display Help
 Help() {
   echo
-  echo "docker-volume-backup"
+  echo "minecraft-bind-backup"
   echo "####################"
   echo
-  echo "Description: Backup docker volumes."
-  echo "Syntax: docker-volume-backup [-v|-a|-o|-c|help]"
-  echo "Example: docker-volume-backup -v postgres_data01 -o /tmp -c postgres01"
+  echo "Description: Backup bind mount data directory."
+  echo "Syntax: minecraft-bind-backup [-p|-o|-c|help]"
+  echo "Example: minecraft-bind-backup -p /var/www/minecraft/.data -o /tmp -c Minecraft"
   echo "options:"
-  echo "  -v    Comma-separated list of volume names."
-  echo "  -a    Backup all volumes."
+  echo "  -p    Data directory path to backup."
   echo "  -o    Output directory. Defaults to '/var/tmp'"
-  echo "  -c    Docker container name."
+  echo "  -c    Logical name for backup subfolder."
   echo "  -r    Clear directory? true/false(default)"
   echo "  -d    Delete files older than this many days (set 0 to keep all)"
-  echo "  help  Show docker-volume-backup manual."
+  echo "  help  Show minecraft-bind-backup manual."
   echo
 }
 
@@ -30,13 +29,11 @@ if [[ $1 == 'help' ]]; then
 fi
 
 # Process params
-while getopts ":a :c: :v: :o: :r: :d:" opt; do
+while getopts ":c: :p: :o: :r: :d:" opt; do
   case $opt in
-    a) ALL='true'
-    ;;
     c) CONTAINER="$OPTARG"
     ;;
-    v) VOLUMES="$OPTARG"
+    p) DATA_PATH="$OPTARG"
     ;;
     o) DIR="$OPTARG"
     ;;
@@ -56,24 +53,11 @@ done
 : ${DAYSBACK:=0}
 
 # Verify variables
-[[ -z "$VOLUMES" ]] && [[ -z "$ALL" ]] && { echo "Parameter -v or -a|volumes or all must be set" ; exit 1; }
+[[ -z "$DATA_PATH" ]] && { echo "Parameter -p|path is empty" ; exit 1; }
 [[ -z "$DIR" ]] && { echo "Parameter -d|dir is empty" ; exit 1; }
 [[ -z "$CONTAINER" ]] && { echo "Parameter -c|container is empty" ; exit 1; }
+[[ ! -d "$DATA_PATH" ]] && { echo "Data directory does not exist: $DATA_PATH" ; exit 1; }
 echo "DAYSBACK: $DAYSBACK"
-
-if $ALL ; then
-  # Get all volumes from docker container
-  VOLUME_LIST=($(docker inspect -f '{{ range .Mounts }}{{ .Name }} {{ end }}' $CONTAINER))
-
-  # Concate volume list
-  printf -v VOLUMES '%s,' "${VOLUME_LIST[@]}"
-  VOLUMES="${VOLUMES%,}"
-fi
-
-if [[ ! -z $VOLUMES ]] ; then
-  # Split volumes param values
-  VOLUME_LIST=($(echo $VOLUMES | tr "," "\n"))
-fi
 
 # Create backup folder
 mkdir -p ${DIR}/${CONTAINER}
@@ -88,12 +72,9 @@ if $CLEAR ; then
     rm -rf ${DIR}/${CONTAINER}/*
 fi
 
-# Create dump with docker for each database
-for VOLUME in "${VOLUME_LIST[@]}"
-do
-  echo "Run backup for Docker volume $VOLUME"
-  docker run --rm -v $VOLUME:/_data  -v ${DIR}/${CONTAINER}:/backup ubuntu tar cf /backup/${VOLUME}_$(date '+%Y-%m-%d_%H%M%S').tar /_data
-done
+BACKUP_FILE="${DIR}/${CONTAINER}/data_$(date '+%Y-%m-%d_%H%M%S').tar"
+echo "Run backup for bind mount directory ${DATA_PATH}"
+tar cf "${BACKUP_FILE}" -C "${DATA_PATH}" .
 
 # Notify if backup has finished
-echo "The Docker volume backup has finished: ${DIR}/${CONTAINER}/{${VOLUMES}_$(date '+%Y-%m-%d_%H%M%S')}.tar"
+echo "The bind mount backup has finished: ${BACKUP_FILE}"

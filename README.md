@@ -27,7 +27,7 @@ ONLINE_MODE="TRUE"
 MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet"
 BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
-VOLUME_NAME="Nombre del volumen usado por el script de backup (Ejemplo: 'minecraftdata')"
+DATA_FOLDER="Carpeta de datos bind mount usada por backup/restauración (Ejemplo: '.data')"
 CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 ```
 
@@ -37,6 +37,7 @@ El servidor usa:
 
 Para cargar cualquier mod deberá hacerse en la carpeta `mods`
 La configuración de Geyser standalone se encuentra en `geyser/config.yml`
+Los datos del servidor se guardan en la carpeta oculta `.data`
 
 Ejecutar Docker compose:
 ```

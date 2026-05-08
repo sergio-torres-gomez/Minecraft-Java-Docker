@@ -24,7 +24,7 @@ services:
     stdin_open: true
     working_dir: /
     volumes:
-      - ./data:/data
+      - ./.data:/data
       - ./mods:/mods
   geyser:
     container_name: Geyser
