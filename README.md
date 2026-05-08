@@ -14,6 +14,7 @@ Configurar archivo `.env`
 
 ```
 SERVER_NAME="Nombre del servidor"
+LEVEL_NAME="Nombre del mundo"
 TYPE="FABRIC"
 VERSION="1.21.1"
 INIT_MEMORY="1G"
