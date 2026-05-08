@@ -10,7 +10,11 @@ Servidor de Minecraft con docker y copias de seguridad automáticas.
 
 Descargar el repositorio en la carpeta que queramos tener los archivos de Minecraft.
 
-Configurar archivo `.env`
+Crear el archivo `.env` a partir de `.env.example` y configurarlo:
+
+```
+cp .env.example .env
+```
 
 ```
 SERVER_NAME="Nombre del servidor"
