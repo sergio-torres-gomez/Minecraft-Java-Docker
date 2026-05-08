@@ -16,7 +16,7 @@ services:
       VIEW_DISTANCE: ${VIEW_DISTANCE}
       SIMULATION_DISTANCE: ${SIMULATION_DISTANCE}
       ONLINE_MODE: ${ONLINE_MODE}
-      PLUGINS: ${PLUGINS}
+      MODRINTH_PROJECTS: ${MODRINTH_PROJECTS}
     tty: true
     ports:
       - "25565:25565"
@@ -26,4 +26,4 @@ services:
     working_dir: /
     volumes:
       - ./.data:/data
-      - ./plugins:/plugins
+      - ./mods:/mods
