@@ -49,4 +49,4 @@ done
 mkdir -p "$DATA_PATH"
 echo "Start Restore Bind Backup"
 tar xvf "$DIRECTORY/$FILE" -C "$DATA_PATH"
-echo "Finsh"
+echo "Finish"
