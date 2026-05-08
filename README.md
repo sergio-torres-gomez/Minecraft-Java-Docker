@@ -14,7 +14,7 @@ Configurar archivo `.env`
 
 ```
 SERVER_NAME="Nombre del servidor"
-TYPE="FABRIC"
+TYPE="PAPER"
 VERSION="1.21.5"
 MEMORY="1500M"
 DIFFICULTY="normal"
@@ -24,7 +24,7 @@ ENABLE_WHITELIST="TRUE"
 VIEW_DISTANCE="8"
 SIMULATION_DISTANCE="4"
 ONLINE_MODE="TRUE"
-MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet"
+PLUGINS="Geyser-Spigot,Floodgate"
 BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
 DATA_FOLDER="Carpeta de datos bind mount usada por backup/restauración (Ejemplo: '.data')"
@@ -33,10 +33,9 @@ CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 
 El servidor usa:
 - Puerto Java: `25565/tcp`
-- Puerto Bedrock (contenedor Geyser): `19132/udp`
+- Puerto Bedrock (plugin Geyser): `19132/udp`
 
-Para cargar cualquier mod deberá hacerse en la carpeta `mods`
-La configuración de Geyser standalone se encuentra en `geyser/config.yml`
+Para cargar cualquier plugin deberá hacerse en la carpeta `plugins`
 Los datos del servidor se guardan en la carpeta oculta `.data`
 
 Ejecutar Docker compose:
