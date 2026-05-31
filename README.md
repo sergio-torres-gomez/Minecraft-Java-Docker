@@ -10,26 +10,44 @@ Servidor de Minecraft con docker y copias de seguridad automáticas.
 
 Descargar el repositorio en la carpeta que queramos tener los archivos de Minecraft.
 
-Configurar archivo `.env`
+Crear el archivo `.env` a partir de `.env.example` y configurarlo:
+
+```
+cp .env.example .env
+```
 
 ```
 SERVER_NAME="Nombre del servidor"
-DIFFICULTY="easy"
-GAMEMODE="survival"
 LEVEL_NAME="Nombre del mundo"
-MAX_PLAYERS="3"
-BACKUP_FOLDER="Nombre de la carpeta donde van las Backups (Ejemplo:'Backup')"
+TYPE="FABRIC"
+VERSION="1.21.1"
+INIT_MEMORY="1G"
+MAX_MEMORY="1500M"
+DIFFICULTY="normal"
+GAMEMODE="survival"
+MAX_PLAYERS="5"
+ENABLE_WHITELIST="TRUE"
+VIEW_DISTANCE="8"
+SIMULATION_DISTANCE="4"
+ONLINE_MODE="TRUE"
+ENABLE_RCON="true"
+RCON_PASSWORD="REPLACE_WITH_SECURE_PASSWORD"
+MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser,floodgate"
+BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
 ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
-VOLUME_NAME="Nombre que le vamos a poner al volumen de docker (En este caso: 'minecraftdata')"
+DATA_FOLDER="Carpeta de datos bind mount usada por backup/restauración (Ejemplo: '.data')"
 CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
 ```
 
-Para cargar cualquier plugin deberá hacerse en la carpeta `plugins`
+El servidor usa:
+- Puerto Java: `25565/tcp`
+- Puerto Bedrock (plugin Geyser): `19132/udp`
+- Puerto RCON: `25575/tcp`
 
-Crear el volumen de Docker:
-```
-docker volume create minecraftdata
-```
+⚠️ `RCON_PASSWORD` da acceso administrativo al servidor. Cámbiala siempre por una contraseña fuerte y única antes de exponer el puerto RCON.
+
+Para cargar cualquier mod deberá hacerse en la carpeta `mods`
+Los datos del servidor se guardan en la carpeta oculta `.data`
 
 Ejecutar Docker compose:
 ```

@@ -11,10 +11,10 @@ Help() {
  echo
  echo "####################"
  echo
- echo "Description: Restore Backups docker volumes Auto."
+ echo "Description: Restore Backups bind mount Auto."
  echo "Syntax: restaurar_backup.sh [-f|help]"
  echo "options:"
- echo "  -f    File name docker backup"
+ echo "  -f    Backup file name"
  echo
 }
 
@@ -38,6 +38,6 @@ done
 
 echo "Restauración Automática"
 
-echo "/bin/bash ${ROOT_FOLDER}/restore_backup.sh -c ${CONTAINER_NAME} -d ${ROOT_FOLDER}/${BACKUP_FOLDER}/${CONTAINER_NAME} -f ${FILE}"
+echo "/bin/bash ${ROOT_FOLDER}/restore_backup.sh -p ${ROOT_FOLDER}/${DATA_FOLDER} -d ${ROOT_FOLDER}/${BACKUP_FOLDER}/${CONTAINER_NAME} -f ${FILE}"
 
-/bin/bash ${ROOT_FOLDER}/restore_backup.sh -c ${CONTAINER_NAME} -d ${ROOT_FOLDER}/${BACKUP_FOLDER}/${CONTAINER_NAME} -f ${FILE}
+/bin/bash ${ROOT_FOLDER}/restore_backup.sh -p ${ROOT_FOLDER}/${DATA_FOLDER} -d ${ROOT_FOLDER}/${BACKUP_FOLDER}/${CONTAINER_NAME} -f ${FILE}
