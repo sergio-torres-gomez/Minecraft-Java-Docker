@@ -89,11 +89,17 @@ docker compose exec restic-backup restic snapshots
 ```
 docker compose stop minecraft
 ```
-2. Restaurar el último snapshot sobre `.data`:
+2. Restaurar primero a una carpeta temporal para revisar el contenido:
 ```
-docker compose run --rm -v "$(pwd)/.data:/restore" restic-backup restic restore latest --target /restore
+mkdir -p .restore
+docker compose run --rm -v "$(pwd)/.restore:/restore" restic-backup restic restore latest --target /restore
 ```
-3. Levantar de nuevo el servidor:
+3. Cuando hayas validado `.restore`, sustituir `.data` (esto sobrescribe los datos actuales):
+```
+rm -rf .data/*
+cp -a .restore/. .data/
+```
+4. Levantar de nuevo el servidor:
 ```
 docker compose start minecraft
 ```

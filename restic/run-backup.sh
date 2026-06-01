@@ -22,5 +22,10 @@ fi
 
 restic backup /data
 
-# shellcheck disable=SC2086
-restic forget ${RESTIC_FORGET_ARGS}
+if [[ -z "${RESTIC_FORGET_ARGS:-}" ]]; then
+  echo "Missing required variable: RESTIC_FORGET_ARGS" >&2
+  exit 1
+fi
+
+read -r -a forget_args <<< "${RESTIC_FORGET_ARGS}"
+restic forget "${forget_args[@]}"

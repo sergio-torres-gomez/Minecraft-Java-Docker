@@ -4,7 +4,6 @@ set -euo pipefail
 : "${RESTIC_CRON_SCHEDULE:=0 5 * * *}"
 : "${TZ:=UTC}"
 : "${RESTIC_CRON_LOG_PATH:=/proc/1/fd/1}"
-: "${RESTIC_FORGET_ARGS:=--keep-daily 7 --keep-weekly 4 --prune}"
 
 if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then
   ln -sf "/usr/share/zoneinfo/${TZ}" /etc/localtime
