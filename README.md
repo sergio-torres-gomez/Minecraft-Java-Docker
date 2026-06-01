@@ -92,7 +92,7 @@ docker compose exec Minecraft-Backup /usr/local/bin/run-backup.sh
 Este comando ejecutará inmediatamente:
 1. Un backup completo de los datos del servidor
 2. Aplicará la política de retención
-3. Subírá los cambios a S3
+3. Subirá los cambios a S3
 
 ### Listar snapshots (backups existentes)
 
