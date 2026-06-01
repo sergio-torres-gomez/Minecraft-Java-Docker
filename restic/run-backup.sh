@@ -18,6 +18,7 @@ for var_name in "${required_vars[@]}"; do
 done
 
 if ! restic snapshots >/dev/null 2>&1; then
+  echo "Restic repository not found, initializing..."
   restic init
 fi
 
@@ -25,3 +26,15 @@ restic backup /data
 
 read -r -a forget_args <<< "${RESTIC_FORGET_ARGS}"
 restic forget "${forget_args[@]}"
+
+has_prune="false"
+for arg in "${forget_args[@]}"; do
+  if [[ "${arg}" == "--prune" ]]; then
+    has_prune="true"
+    break
+  fi
+done
+
+if [[ "${has_prune}" == "false" ]]; then
+  restic prune
+fi

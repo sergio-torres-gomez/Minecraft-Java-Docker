@@ -5,9 +5,15 @@ set -euo pipefail
 : "${TZ:=UTC}"
 : "${RESTIC_CRON_LOG_PATH:=/proc/1/fd/1}"
 
-if [[ ! "${RESTIC_CRON_LOG_PATH}" =~ ^/[A-Za-z0-9._/-]+$ ]]; then
+if [[ ! "${RESTIC_CRON_LOG_PATH}" =~ ^/[A-Za-z0-9._/-]+$ || "${RESTIC_CRON_LOG_PATH}" == *".."* ]]; then
   echo "Invalid RESTIC_CRON_LOG_PATH '${RESTIC_CRON_LOG_PATH}', using /proc/1/fd/1"
   RESTIC_CRON_LOG_PATH="/proc/1/fd/1"
+fi
+
+if [[ "${RESTIC_CRON_LOG_PATH}" != "/proc/1/fd/1" ]]; then
+  log_dir="$(dirname "${RESTIC_CRON_LOG_PATH}")"
+  mkdir -p "${log_dir}"
+  touch "${RESTIC_CRON_LOG_PATH}"
 fi
 
 if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then
