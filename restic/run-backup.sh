@@ -22,6 +22,5 @@ fi
 
 restic backup /data
 
-RESTIC_FORGET_ARGS="${RESTIC_FORGET_ARGS:---keep-daily 7 --keep-weekly 4 --prune}"
 # shellcheck disable=SC2086
 restic forget ${RESTIC_FORGET_ARGS}
