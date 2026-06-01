@@ -5,6 +5,11 @@ set -euo pipefail
 : "${TZ:=UTC}"
 : "${RESTIC_CRON_LOG_PATH:=/proc/1/fd/1}"
 
+if [[ ! "${RESTIC_CRON_LOG_PATH}" =~ ^/[A-Za-z0-9._/-]+$ ]]; then
+  echo "Invalid RESTIC_CRON_LOG_PATH '${RESTIC_CRON_LOG_PATH}', using /proc/1/fd/1"
+  RESTIC_CRON_LOG_PATH="/proc/1/fd/1"
+fi
+
 if [[ -f "/usr/share/zoneinfo/${TZ}" ]]; then
   ln -sf "/usr/share/zoneinfo/${TZ}" /etc/localtime
   echo "${TZ}" > /etc/timezone

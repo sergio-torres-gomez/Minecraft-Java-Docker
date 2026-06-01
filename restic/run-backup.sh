@@ -7,6 +7,7 @@ required_vars=(
   AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY
   AWS_DEFAULT_REGION
+  RESTIC_FORGET_ARGS
 )
 
 for var_name in "${required_vars[@]}"; do
@@ -21,11 +22,6 @@ if ! restic snapshots >/dev/null 2>&1; then
 fi
 
 restic backup /data
-
-if [[ -z "${RESTIC_FORGET_ARGS:-}" ]]; then
-  echo "Missing required variable: RESTIC_FORGET_ARGS" >&2
-  exit 1
-fi
 
 read -r -a forget_args <<< "${RESTIC_FORGET_ARGS}"
 restic forget "${forget_args[@]}"
