@@ -1,5 +1,5 @@
 # Minecraft-Java-Docker
-Servidor de Minecraft con docker y copias de seguridad automáticas.
+Servidor de Minecraft con Docker y backups automáticos con Restic en S3.
 
 ## Requisitos 
 
@@ -33,10 +33,16 @@ ONLINE_MODE="TRUE"
 ENABLE_RCON="true"
 RCON_PASSWORD="REPLACE_WITH_SECURE_PASSWORD"
 MODRINTH_PROJECTS="lithium,ferrite-core,krypton,fabric-carpet,geyser,floodgate"
-BACKUP_FOLDER="Nombre de la carpeta donde van las backups (Ejemplo:'Backup')"
-ROOT_FOLDER="Nombre raíz de la carpeta raíz donde hemos descargado el repositorio (Ejemplo: '/var/www/minecraft')"
-DATA_FOLDER="Carpeta de datos bind mount usada por backup/restauración (Ejemplo: '.data')"
-CONTAINER_NAME="Nombre del contenedor (En este caso 'Minecraft')"
+
+RESTIC_REPOSITORY="s3:s3.amazonaws.com/REPLACE_BUCKET/REPLACE_PATH"
+RESTIC_PASSWORD="REPLACE_WITH_RESTIC_PASSWORD"
+AWS_ACCESS_KEY_ID="REPLACE_WITH_AWS_ACCESS_KEY"
+AWS_SECRET_ACCESS_KEY="REPLACE_WITH_AWS_SECRET_KEY"
+AWS_DEFAULT_REGION="eu-west-1"
+RESTIC_CRON_SCHEDULE="0 5 * * *"
+RESTIC_FORGET_ARGS="--keep-daily 7 --keep-weekly 4 --prune"
+RESTIC_RUN_ON_STARTUP="false"
+TZ="Europe/Madrid"
 ```
 
 El servidor usa:
@@ -54,24 +60,39 @@ Ejecutar Docker compose:
 docker compose up -d
 ```
 
-## Backups automáticas
+Esto levanta:
+- `minecraft`: servidor de juego.
+- `restic-backup`: contenedor independiente con cron interno que hace backup diario a las 05:00.
 
-Para generar backups automáticas, crear la carpeta Backup dentro de la carpeta donde tenemos los archivos:
-```
-mkdir Backup
-```
+## Backups automáticos con Restic
 
-Añadir al crontab lo siguiente
-```
-crontab -e
-```
+- El contenedor `restic-backup` ejecuta `restic backup /data` cada día a las 05:00 (`RESTIC_CRON_SCHEDULE`).
+- Si el repositorio de Restic no existe todavía, lo inicializa automáticamente.
+- Después de cada backup aplica la política de retención definida en `RESTIC_FORGET_ARGS`.
 
-```
-0 */8 * * * bash /var/www/minecraft/crear_backup.sh
-```
-
-## Restaurar backups
+Para lanzar un backup manual:
 
 ```
-bash restaurar_backup.sh -f nombre_del_archivo_backup
+docker compose exec restic-backup /usr/local/bin/run-backup.sh
+```
+
+Para listar snapshots:
+
+```
+docker compose exec restic-backup restic snapshots
+```
+
+## Restaurar backups desde Restic
+
+1. Parar el servidor:
+```
+docker compose stop minecraft
+```
+2. Restaurar el último snapshot sobre `.data`:
+```
+docker compose run --rm -v "$(pwd)/.data:/restore" restic-backup restic restore latest --target /restore
+```
+3. Levantar de nuevo el servidor:
+```
+docker compose start minecraft
 ```
