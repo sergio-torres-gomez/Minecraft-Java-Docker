@@ -94,12 +94,13 @@ docker compose stop minecraft
 mkdir -p .restore
 docker compose run --rm -v "$(pwd)/.restore:/restore" restic-backup restic restore latest --target /restore
 ```
-3. Cuando hayas validado `.restore`, sustituir `.data` (esto sobrescribe los datos actuales):
+3. Cuando hayas validado `.restore`, hacer copia del estado actual y sustituir `.data`:
 ```
-rm -rf .data/*
+mv .data .data.old
+mkdir -p .data
 cp -a .restore/. .data/
 ```
-4. Levantar de nuevo el servidor:
+4. Levantar de nuevo el servidor (si todo funciona, puedes borrar `.data.old`):
 ```
 docker compose start minecraft
 ```
