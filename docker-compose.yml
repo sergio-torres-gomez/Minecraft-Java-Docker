@@ -32,3 +32,22 @@ services:
     volumes:
       - ./.data:/data
       - ./mods:/mods
+
+  minecraft-restic:
+    container_name: Minecraft-Backup
+    build:
+      context: ./restic
+    environment:
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      RESTIC_CRON_SCHEDULE: "0 5 * * *"
+      RESTIC_CRON_LOG_PATH: "/proc/1/fd/1"
+      RESTIC_FORGET_ARGS: "--keep-daily 3 --keep-monthly 3 --prune"
+      RESTIC_RUN_ON_STARTUP: "false"
+      TZ: "Europe/Madrid"
+    volumes:
+      - ./.data:/data:ro
+    restart: always

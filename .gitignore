@@ -1,3 +1,4 @@
-Backup/*
+.idea/*
 .data/*
+.restore/*
 .env
