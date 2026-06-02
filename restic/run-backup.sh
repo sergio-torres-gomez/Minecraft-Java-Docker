@@ -17,9 +17,15 @@ for var_name in "${required_vars[@]}"; do
   fi
 done
 
-if ! restic snapshots >/dev/null 2>&1; then
-  echo "Restic repository not found, initializing..."
-  restic init
+if ! snapshot_output=$(restic snapshots 2>&1); then
+  if echo "${snapshot_output}" | grep -qi "no repository\|repository does not exist\|Is there a repository"; then
+    echo "Restic repository not found, initializing..."
+    restic init
+  else
+    echo "ERROR: Could not connect to restic repository:" >&2
+    echo "${snapshot_output}" >&2
+    exit 1
+  fi
 fi
 
 restic backup /data

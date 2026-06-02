@@ -20,7 +20,7 @@ Editar `.env` y completar **obligatoriamente** estos campos:
 - `SERVER_NAME`: Nombre del servidor Minecraft
 - `LEVEL_NAME`: Nombre del mundo/nivel
 - `RCON_PASSWORD`: Contraseña fuerte para RCON (acceso administrativo)
-- Credenciales de AWS S3 para backups: `RESTIC_REPOSITORY`, `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- Credenciales de AWS S3 para backups: `RESTIC_REPOSITORY`, `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`
 
 Ejemplo de configuración:
 
@@ -51,7 +51,7 @@ AWS_DEFAULT_REGION="eu-west-1"
 ```
 
 **Configuración de backups (automática)**:
-- Schedule: Diariamente a las 05:00 UTC
+- Schedule: Diariamente a las 05:00 Europe/Madrid
 - Retención: 3 backups diarios + 3 backups mensuales
 - Destino: S3 configurado en `RESTIC_REPOSITORY`
 
@@ -77,7 +77,7 @@ Esto levanta:
 ## Backups automáticos con Restic
 
 El contenedor `Minecraft-Backup` ejecuta automáticamente:
-- **Backup diario**: Cada día a las 05:00 UTC (`RESTIC_CRON_SCHEDULE: "0 5 * * *"`)
+- **Backup diario**: Cada día a las 05:00 Europe/Madrid (`RESTIC_CRON_SCHEDULE: "0 5 * * *"`)
 - **Inicialización automática**: Si el repositorio de Restic en S3 no existe, se crea automáticamente
 - **Política de retención**: Mantiene 3 backups diarios y 3 backups mensuales (`RESTIC_FORGET_ARGS: "--keep-daily 3 --keep-monthly 3 --prune"`)
 
@@ -86,7 +86,7 @@ El contenedor `Minecraft-Backup` ejecuta automáticamente:
 Si necesitas hacer un backup en cualquier momento (sin esperar al backup programado):
 
 ```
-docker compose exec Minecraft-Backup /usr/local/bin/run-backup.sh
+docker compose run --rm minecraft-restic /usr/local/bin/run-backup.sh
 ```
 
 Este comando ejecutará inmediatamente:
@@ -99,7 +99,7 @@ Este comando ejecutará inmediatamente:
 Para ver todos los backups que tienes almacenados en S3:
 
 ```
-docker compose exec Minecraft-Backup restic snapshots
+docker compose run --rm minecraft-restic restic snapshots
 ```
 
 Esto mostrará una lista con fechas, horas y IDs de cada backup disponible.
@@ -118,7 +118,7 @@ docker compose stop minecraft
 2. **Restaurar el backup a una carpeta temporal** (puedes cambiar `latest` por un snapshot ID específico):
 ```
 mkdir -p .restore
-docker compose run --rm -v "$(pwd)/.restore:/restore" Minecraft-Backup restic restore latest --target /restore
+docker compose run --rm -v "$(pwd)/.restore:/restore" minecraft-restic restic restore latest --target /restore
 ```
 
 3. **Validar el contenido** de `.restore` para asegurar que es el backup correcto.
@@ -146,8 +146,8 @@ Si quieres restaurar un snapshot específico en lugar del más reciente:
 
 ```
 # Primero lista todos los snapshots
-docker compose exec Minecraft-Backup restic snapshots
+docker compose run --rm minecraft-restic restic snapshots
 
 # Luego restaura usando el ID del snapshot
-docker compose run --rm -v "$(pwd)/.restore:/restore" Minecraft-Backup restic restore <SNAPSHOT_ID> --target /restore
+docker compose run --rm -v "$(pwd)/.restore:/restore" minecraft-restic restic restore <SNAPSHOT_ID> --target /restore
 ```

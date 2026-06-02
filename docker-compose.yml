@@ -33,7 +33,7 @@ services:
       - ./.data:/data
       - ./mods:/mods
 
-  restic-backup:
+  minecraft-restic:
     container_name: Minecraft-Backup
     build:
       context: ./restic
@@ -46,7 +46,7 @@ services:
       RESTIC_CRON_SCHEDULE: "0 5 * * *"
       RESTIC_CRON_LOG_PATH: "/proc/1/fd/1"
       RESTIC_FORGET_ARGS: "--keep-daily 3 --keep-monthly 3 --prune"
-      RESTIC_RUN_ON_STARTUP: "true"
+      RESTIC_RUN_ON_STARTUP: "false"
       TZ: "Europe/Madrid"
     volumes:
       - ./.data:/data:ro

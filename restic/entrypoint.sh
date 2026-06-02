@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# If has any argument, exec directly. (one-off mode)
+if [[ $# -gt 0 ]]; then
+  exec "$@"
+fi
+
 # These values are mandatory and must be provided
 if [[ -z "${RESTIC_CRON_SCHEDULE:-}" ]]; then
   echo "ERROR: RESTIC_CRON_SCHEDULE is not set. This is a mandatory configuration." >&2
