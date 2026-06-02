@@ -1,6 +1,6 @@
 FROM alpine:3.23
 
-RUN apk add --no-cache bash restic dcron tzdata ca-certificates
+RUN apk add --no-cache bash restic tzdata ca-certificates
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY run-backup.sh /usr/local/bin/run-backup.sh
